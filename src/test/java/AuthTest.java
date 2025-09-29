@@ -12,7 +12,7 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Login extends env_target {
+public class AuthTest extends env_target {
 
     private WebDriverWait wait;
 
@@ -30,7 +30,16 @@ public class Login extends env_target {
 
         // inisialisasi explicit wait
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
     }
+
+    @AfterEach
+    void tearDown() {
+        // tutup browser
+        if (driver != null) driver.quit();
+    }
+
+    // =============== TESTS ===============
 
     @Test
     void positiveLogin() {
@@ -42,9 +51,9 @@ public class Login extends env_target {
         driver.findElement(By.id("password")).sendKeys("secret_sauce");
         driver.findElement(By.id("login-button")).click();
 
-        // validasi halaman products terbuka
-        wait.until(ExpectedConditions.urlContains("inventory.html"));
-        wait.until(ExpectedConditions.textToBe(By.cssSelector(".title"), "Products"));
+        // validasi jika sudah di halaman utama
+        wait.until(ExpectedConditions.urlToBe("https://www.saucedemo.com/inventory.html"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@class = \"title\"] [text() = 'Products']\n")));
     }
 
     @Test
@@ -171,7 +180,7 @@ public class Login extends env_target {
         driver.findElement(By.id("password")).sendKeys("secret_sauce");
         driver.findElement(By.id("login-button")).click();
 
-        // validasi sudah masuk inventory
+        // validasi jika sudah di halmaan utama
         wait.until(ExpectedConditions.urlToBe("https://www.saucedemo.com/inventory.html"));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@class = \"title\"] [text() = 'Products']\n")));
 
@@ -184,9 +193,5 @@ public class Login extends env_target {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-button")));
     }
 
-    @AfterEach
-    void tearDown() {
-        // tutup browser
-        if (driver != null) driver.quit();
-    }
+
 }

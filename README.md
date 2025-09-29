@@ -4,7 +4,7 @@ Project ini berisi automation testing menggunakan **Selenium WebDriver** dengan 
 untuk menguji website [SauceDemo](https://www.saucedemo.com/).
 
 Fitur yang diuji:
-- **Auth**: positive login, negetaive login dan logout
+- **AuthTest**: positive login, negetaive login dan logout
 - **Keranjang**: tambah produk, hapus produk, cek total harga, dll.
 
 Tools: Java, JUnit 5, Selenium, Maven, IntelliJ IDEA.  
