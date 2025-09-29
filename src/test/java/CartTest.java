@@ -16,7 +16,7 @@ public class CartTest extends env_target {
     private WebDriverWait wait;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         // Setup driver
         System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\drivers\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
@@ -43,14 +43,14 @@ public class CartTest extends env_target {
     }
 
     @AfterEach
-    void tearDown(){
-        if(driver != null){
+    void tearDown() {
+        if (driver != null) {
             driver.quit();
         }
     }
 
     @Test
-    void addProduct(){
+    void addProduct() {
         // klik button Add to cart
         driver.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
 
@@ -70,6 +70,31 @@ public class CartTest extends env_target {
 
         String namaProduk = driver.findElement(By.className("inventory_item_name")).getText();
         assertEquals("Sauce Labs Backpack", namaProduk);
+    }
 
+    @Test
+    void removeProductInHome() {
+        // klik button Add to cart
+        driver.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
+
+        // validasi angka badge berubah
+        String cartBadge = wait
+                .until(ExpectedConditions.visibilityOfElementLocated(By.className("shopping_cart_badge")))
+                .getText();
+        assertEquals("1", cartBadge);
+
+        // validasi button berubah menjadi "Remove"
+        String buttonRemoveText = driver.findElement(By.id("remove-sauce-labs-backpack")).getText();
+        assertEquals("Remove", buttonRemoveText);
+
+        // klik button Remove
+        driver.findElement(By.id("remove-sauce-labs-backpack")).click();
+
+        // validasi angka badge hilang
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("shopping_cart_badge")));
+
+        // validasi button kembali menjadi "Add to cart"
+        String buttonAddToCartText = driver.findElement(By.id("add-to-cart-sauce-labs-backpack")).getText();
+        assertEquals("Add to cart", buttonAddToCartText);
     }
 }
