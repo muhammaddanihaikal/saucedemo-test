@@ -51,50 +51,78 @@ public class CartTest extends env_target {
 
     @Test
     void addProduct() {
-        // klik button Add to cart
+        // add produk ke cart
         driver.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
 
-        // validasi angka badge berubah
+        // validasi badge cart = 1
         String cartBadge = wait
                 .until(ExpectedConditions.visibilityOfElementLocated(By.className("shopping_cart_badge")))
                 .getText();
         assertEquals("1", cartBadge);
 
-        // validasi button berubah menjadi "Remove"
+        // validasi tombol berubah jadi "Remove"
         String buttonText = driver.findElement(By.id("remove-sauce-labs-backpack")).getText();
         assertEquals("Remove", buttonText);
 
-        // validasi data masuk ke cart
+        // buka halaman cart
         driver.findElement(By.className("shopping_cart_link")).click();
         wait.until(ExpectedConditions.urlToBe("https://www.saucedemo.com/cart.html"));
 
+        // validasi nama produk di cart
         String namaProduk = driver.findElement(By.className("inventory_item_name")).getText();
         assertEquals("Sauce Labs Backpack", namaProduk);
     }
 
+
+    @Test
+    void addMultipleProduct() {
+        // add 2 produk ke cart
+        driver.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
+        driver.findElement(By.id("add-to-cart-sauce-labs-bike-light")).click();
+
+        // validasi badge cart = 2
+        String cartBadge = wait.until(ExpectedConditions
+                        .visibilityOfElementLocated(By.className("shopping_cart_badge")))
+                .getText();
+        assertEquals("2", cartBadge);
+
+        // buka halaman cart
+        driver.findElement(By.className("shopping_cart_link")).click();
+        wait.until(ExpectedConditions.urlToBe("https://www.saucedemo.com/cart.html"));
+
+        // validasi nama produk di cart
+        String namaProduk1 = driver.findElement(By.cssSelector("#item_4_title_link .inventory_item_name")).getText();
+        assertEquals("Sauce Labs Backpack", namaProduk1);
+
+        String namaProduk2 = driver.findElement(By.cssSelector("#item_0_title_link .inventory_item_name")).getText();
+        assertEquals("Sauce Labs Bike Light", namaProduk2);
+    }
+
+
     @Test
     void removeProductInHome() {
-        // klik button Add to cart
+        // add produk ke cart
         driver.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
 
-        // validasi angka badge berubah
+        // validasi badge cart = 1
         String cartBadge = wait
                 .until(ExpectedConditions.visibilityOfElementLocated(By.className("shopping_cart_badge")))
                 .getText();
         assertEquals("1", cartBadge);
 
-        // validasi button berubah menjadi "Remove"
+        // validasi tombol berubah jadi "Remove"
         String buttonRemoveText = driver.findElement(By.id("remove-sauce-labs-backpack")).getText();
         assertEquals("Remove", buttonRemoveText);
 
-        // klik button Remove
+        // klik tombol remove
         driver.findElement(By.id("remove-sauce-labs-backpack")).click();
 
-        // validasi angka badge hilang
+        // validasi badge hilang
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("shopping_cart_badge")));
 
-        // validasi button kembali menjadi "Add to cart"
+        // validasi tombol kembali jadi "Add to cart"
         String buttonAddToCartText = driver.findElement(By.id("add-to-cart-sauce-labs-backpack")).getText();
         assertEquals("Add to cart", buttonAddToCartText);
     }
+
 }
