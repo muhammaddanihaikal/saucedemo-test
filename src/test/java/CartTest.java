@@ -73,7 +73,6 @@ public class CartTest extends env_target {
         assertEquals("Sauce Labs Backpack", namaProduk);
     }
 
-
     @Test
     void addMultipleProduct() {
         // add 2 produk ke cart
@@ -97,7 +96,6 @@ public class CartTest extends env_target {
         String namaProduk2 = driver.findElement(By.cssSelector("#item_0_title_link .inventory_item_name")).getText();
         assertEquals("Sauce Labs Bike Light", namaProduk2);
     }
-
 
     @Test
     void removeProductInHome() {
@@ -123,6 +121,46 @@ public class CartTest extends env_target {
         // validasi tombol kembali jadi "Add to cart"
         String buttonAddToCartText = driver.findElement(By.id("add-to-cart-sauce-labs-backpack")).getText();
         assertEquals("Add to cart", buttonAddToCartText);
+    }
+
+    @Test
+    void positiveCheckout() {
+        // tambah produk ke cart
+        addProduct();
+
+        // klik checkout di cart
+        driver.findElement(By.id("checkout")).click();
+
+        // validasi sudah masuk halaman form checkout
+        wait.until(ExpectedConditions.urlToBe("https://www.saucedemo.com/checkout-step-one.html"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.checkout_info")));
+
+        // isi data form checkout
+        driver.findElement(By.id("first-name")).sendKeys("dani");
+        driver.findElement(By.id("last-name")).sendKeys("haikal");
+        driver.findElement(By.id("postal-code")).sendKeys("12345");
+
+        // klik tombol continue
+        driver.findElement(By.id("continue")).click();
+
+        // validasi sudah masuk halaman detail checkout
+        wait.until(ExpectedConditions.urlToBe("https://www.saucedemo.com/checkout-step-two.html"));
+
+        // cek nama produk sesuai dengan yang ditambahkan
+        String productName = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("#item_4_title_link .inventory_item_name"))).getText();
+        assertEquals("Sauce Labs Backpack", productName);
+
+        // klik finish untuk menyelesaikan checkout
+        driver.findElement(By.id("finish")).click();
+
+        // validasi sudah masuk halaman selesai checkout
+        wait.until(ExpectedConditions.urlToBe("https://www.saucedemo.com/checkout-complete.html"));
+
+        // cek pesan sukses checkout
+        String finishMessege = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("#checkout_complete_container .complete-header"))).getText();
+        assertEquals("Thank you for your order!", finishMessege);
     }
 
 }
